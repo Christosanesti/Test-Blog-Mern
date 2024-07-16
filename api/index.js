@@ -3,8 +3,11 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
+
+
 dotenv.config();
 
+const app = express();
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -14,9 +17,7 @@ mongoose
     console.log(err);
   });
 
-
-const app = express();
-
+app.use(express.json());
 
 app.listen(3000, () => {
     console.log('Server is running at 3000 Hello')
