@@ -43,18 +43,24 @@ function Header() {
         </Link>
         
         </div>
-        <Navbar.Collapse>
+        <Navbar.Collapse >     
+            
+            <Navbar.Link className='hidden'></Navbar.Link>
+
             <Navbar.Link active={path === "/"} as={'div'} >
-                <Link to='/'>اصلی</Link>
+                <Link to='/' dir='rtl'> اصلی </Link>
             </Navbar.Link>
 
+
+            <Navbar.Link active={path === "/projects"} as={'div'}  >
+                <Link to='/projects'> فعالیت ها </Link>
+            </Navbar.Link>
+
+            
             <Navbar.Link active={path === "/about"} as={'div'}>
-                <Link to='/about'>درباره</Link>
+                <Link to='/about'> درباره </Link>
             </Navbar.Link>
 
-            <Navbar.Link active={path === "/projects"} as={'div'}>
-                <Link to='/projects'>فعالیت ها</Link>
-            </Navbar.Link>
         </Navbar.Collapse>
         
         
