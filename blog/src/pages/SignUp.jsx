@@ -1,13 +1,19 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { TbFishChristianity } from "react-icons/tb";
-import { Alert, Button, Label, TextInput } from 'flowbite-react';
+import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import OAuth from '../components/OAuth';
+import { useDispatch, useSelector, } from 'react-redux';
+import {clearError, clearLoading} from '../redux/user/userSlice';
+
 
 
 function SignUp() {
     const [formData, setFormData] = useState({})
     const [errorMessage, setErrorMessage] = useState(null)
+    const {currentUser} = useSelector((state) => state.user);
     const [loading, setLoading] = useState(false)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleChange = (e) => {
         setFormData({...formData, [e.target.id]: e.target.value.trim() })
@@ -24,7 +30,7 @@ function SignUp() {
         try{
             setLoading(true)
             setErrorMessage(null)
-            const res = await fetch('/api/ath/signup', {
+            const res = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -35,12 +41,22 @@ function SignUp() {
             }
             setLoading(false)
             if(res.ok){
-                navigate('/sign-in')
+                navigate('/dashboard?tab=profile')
             }
         } catch(err){
             setErrorMessage('خطا در ارتباط با سرور! اتصال به اینترنت را بررسی فرمایید.')
         }
     }
+    useEffect(() => {
+        if (currentUser) {
+          navigate('/dashboard');
+        }
+    },[dispatch])
+    useEffect(() => {
+    // Dispatch an action to clear the error on component mount
+    dispatch(clearError()); // If you have a clearError action
+    dispatch(clearLoading())
+  }, [dispatch]);
   return (
     <div className='min-h-screen mt-20'>
         <div className='flex p-4 max-w-2xl mx-auto flex-col md:flex-row md:items-center gap-6'>
@@ -89,7 +105,7 @@ function SignUp() {
                             onChange={handleChange}
                         />
                     </div>
-                    <Button gradientDuoTone='pinkToOrange' outline disabled={loading}>
+                    <Button type='submit' gradientDuoTone='pinkToOrange' outline disabled={loading}>
                         {
                             loading ? (
                                 <>
@@ -102,6 +118,7 @@ function SignUp() {
                             ) : 'ثبت نام'
                         }
                     </Button>
+                    <OAuth />
                 </form>
                 <div dir='rtl' className='flex- gap-2 text-sm mt-5'>
                     <span className='text-sm'>
@@ -116,7 +133,7 @@ function SignUp() {
                 </div>
                 {
                     errorMessage && (
-                        <Alert className='mt-5' color='failure'>
+                        <Alert className='mt-5' color='failure' dir='rtl'>
                             {errorMessage}
                         </Alert>
                     )
