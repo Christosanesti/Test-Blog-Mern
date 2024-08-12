@@ -12,9 +12,7 @@ export const create = async (req, res, next) => {
   }
   const slug = slugify(req.body.title
     .split(' ')
-    .join('-')
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9-]/g, ''));
+    .join('-'));
   const newPost = new Post({
     ...req.body,
     slug,
